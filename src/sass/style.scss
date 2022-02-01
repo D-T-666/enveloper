@@ -1,6 +1,6 @@
 $bg: white;
 $fg: black;
-$fgd: #eee;
+$fgd: #666;
 $fgh: #beb;
 
 body {
@@ -20,96 +20,62 @@ body {
     width: 48rem;
     gap: 1rem;
 
-    div {
-      // min-width: 40%;
-      flex-grow: 1;
-      padding: 1rem;
-      border: 1px solid $fg;
-      // border-radius: 1rem;
+    .images {
       display: flex;
-      // flex-direction: column;
-      align-items: center;
-      flex-wrap: wrap;
       gap: 1rem;
-      background-color: $fgd;
 
-      div {
-        background-color: transparent;
-      }
-
-      &.done {
-        background-color: $fgh;
-      }
-    }
-
-    .image-select {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: space-evenly;
-      label {
-        font-size: 1rem;
-        padding: 1rem;
-        border: 1px solid $fg;
-        text-align: center;
-
-        &:hover {
-          background-color: $fg;
-          color: $bg;
-        }
-
-        img {
-          max-width: 100%;
-          max-height: 20rem;
-        }
-      }
-    }
-
-    div {
-      &.format-select {
-        select {
-          font-family: inherit;
-          padding: 1rem;
-          border: 1px solid $fg;
-          background-color: transparent;
-          appearance: none;
-          flex-grow: 1;
-          color: inherit;
-        }
-      }
-
-      &#preview-download {
+      .image-select {
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 1rem;
+        border: 1px solid $fgd;
+        gap: 1rem;
+        flex-basis: 1px;
 
-        button {
-          align-self: stretch;
+        .image-options {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          border: 1px solid $fgd;
+
+          &.hidden {
+            display: none;
+          }
+
+          img {
+            max-width: 100%;
+            max-height: 20rem;
+          }
+        }
+
+        input[type="file"] {
+          width: 10rem;
+          padding: 0;
         }
       }
+    }
 
-      input[type="number"] {
-        font-family: inherit;
-        padding: 1rem;
-        border: 1px solid $fg;
-        background-color: transparent;
-        appearance: none;
-        flex-grow: 1;
-        color: inherit;
-      }
+    // General element styling
 
-      button {
-        font-family: inherit;
-        padding: 1rem;
-        border: 1px solid $fg;
-        background-color: transparent;
-        flex-grow: 1;
-        color: inherit;
+    select,
+    input[type="number"] {
+      border: 1px solid $fgd;
+      border-radius: none;
+    }
+  }
+}
 
-        &:hover {
-          background-color: $fg;
-          color: $bg;
-        }
-      }
+@media screen and (orientation: portrait) {
+  .images {
+    flex-direction: column;
+    align-items: stretch;
+
+    .image-select {
+      max-width: 100%;
     }
   }
 }

@@ -1,16 +1,27 @@
 import * as p5 from "p5";
-import { renderEnvelope } from "./createEnvelope";
+import { renderEnvelope } from "./envelope/createEnvelope";
 import "./sass/style.scss";
 
-new p5((p) => {
+new p5((p: p5) => {
   let imgs: p5.Image[];
-  let a3: p5.Graphics;
+  let canvas: p5.Graphics;
 
   p.setup = () => {
-    a3 = p.createGraphics(100, 100);
+    p.noCanvas();
+    canvas = p.createGraphics(100, 100);
 
-    const img1 = <HTMLInputElement>document.getElementById("img-1");
-    const img2 = <HTMLInputElement>document.getElementById("img-2");
+    const img1_mode = <HTMLSelectElement>(
+      document.getElementById("image-1-mode")
+    );
+    const img2_mode = <HTMLSelectElement>(
+      document.getElementById("image-1-mode")
+    );
+    const img1 = <HTMLInputElement>(
+      document.getElementById("image-select-1-file")
+    );
+    const img2 = <HTMLInputElement>(
+      document.getElementById("image-select-2-file")
+    );
     const paper_format = <HTMLButtonElement>(
       document.getElementById("format-select")
     );
@@ -18,6 +29,7 @@ new p5((p) => {
     const height = <HTMLInputElement>document.getElementById("height");
     const overlap = <HTMLInputElement>document.getElementById("overlap");
     const download = <HTMLButtonElement>document.getElementById("download");
+    const padding = <HTMLButtonElement>document.getElementById("padding");
 
     download.addEventListener("click", () => {
       renderEnvelope(
@@ -25,15 +37,17 @@ new p5((p) => {
         [
           {
             pimage: imgs[0],
+            mode: <"crop" | "padded" | "stretch">img1_mode.value,
           },
           {
             pimage: imgs[1],
+            mode: <"crop" | "padded" | "stretch">img2_mode.value,
           },
         ],
         {
           name: <"A3" | "A4">paper_format.value,
-          canvas: a3,
-          padding: 0,
+          canvas: canvas,
+          padding: Number(padding.value),
         },
         {
           width: Number(width.value),
@@ -42,48 +56,41 @@ new p5((p) => {
         }
       );
 
-      p.save(a3, "gay.jpg");
+      p.save(canvas, "envelope.jpg");
     });
 
     imgs = [];
 
     assingFileCallback(img1, (data) => {
-      (<HTMLLabelElement>(
-        document.querySelector("label[for='img-1']")
-      )).innerHTML = '<img src="" id="img-1-preview" />';
-      const preview_element = <HTMLImageElement>(
-        document.getElementById("img-1-preview")
+      const image_options = document
+        .getElementById("image-select-1")
+        .getElementsByClassName("image-options")[0];
+
+      image_options.classList.remove("hidden");
+
+      const preview = <HTMLImageElement>(
+        image_options.getElementsByClassName("preview")[0]
       );
-      preview_element.src = data;
-      // preview_element.style.display = "unset";
+
+      preview.src = data;
+
       imgs[0] = p.loadImage(data);
     });
     assingFileCallback(img2, (data) => {
-      (<HTMLLabelElement>(
-        document.querySelector("label[for='img-2']")
-      )).innerHTML = '<img src="" id="img-2-preview" />';
-      const preview_element = <HTMLImageElement>(
-        document.getElementById("img-2-preview")
+      const image_options = document
+        .getElementById("image-select-2")
+        .getElementsByClassName("image-options")[0];
+
+      image_options.classList.remove("hidden");
+
+      const preview = <HTMLImageElement>(
+        image_options.getElementsByClassName("preview")[0]
       );
-      preview_element.src = data;
-      // preview_element.style.display = "unset";
+
+      preview.src = data;
+
       imgs[1] = p.loadImage(data);
     });
-  };
-
-  p.draw = () => {
-    if (imgs[0]) {
-      a3.push();
-      a3.background(255);
-      a3.translate(a3.width / 2, a3.height / 2);
-      a3.rotate(p.createVector(imgs[0].height, imgs[0].width).heading());
-      a3.image(imgs[0], -imgs[0].width / 2, -imgs[0].height / 2);
-
-      a3.pop();
-      p.image(a3, 0, 0, 100, 100);
-      // p.save(a3, "gay.jpg");
-      // p.noLoop();
-    }
   };
 }, document.getElementById("preview-download"));
 

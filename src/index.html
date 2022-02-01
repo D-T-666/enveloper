@@ -7,42 +7,81 @@
 	</head>
 	<body>
 		<div id="main">
-			<div class="image-select done">
-				<!-- <div> -->
-					<label for="img-1" class="button"> load image 1 </label>
-					<input type="file" id="img-1" value="image" accept="image/*" style="display: none;" />
-				<!-- </div> -->
-				<!-- <div> -->
-					<label for="img-2" class="button"> load image 2 </label>
-					<input type="file" id="img-2" value="image" accept="image/*" style="display: none;" />
-				<!-- </div> -->
-			</div>
 
-			<div class="format-select">
-				<label>select format</label>
-				<select id="format-select">
-					<option value="A3">A3</option>
-					<option value="A4">A4</option>
-				</select>
-				<label> padding </label>
-				<input type="number" name="overlap" id="padding" step="0.1" />
-			</div>
+            <div class="images">
+                <div id="image-select-1" class="image-select">
+                    
+                    <span>
+                        <label for="image-select-1-file" class="button"> image 1 </label>
+                        <input type="file" id="image-select-1-file" value="image" accept="image/*" />
+                    </span>
 
-			<div class="size-select">
-				<label for="width">width (cm)</label>
-				<input type="number" id="width" step="0.25" value="16" />
-				<label for="height">height (cm)</label>
-				<input type="number" id="height" step="0.25" value="22" />
-			</div>
+                    <div class="image-options hidden">
+                        <span>
+                            <label for="image-1-mode"> mode </label>
+                            <select id="image-1-mode">
+                                <option value="crop">crop</option>
+                                <option value="stretch">stretch</option>
+                                <!-- <option value="padded">padded</option> -->
+                            </select>
+                        </span>
 
-			<div class="overlap-select">
-				<label for="overlap">amount of overlap (cm)</label>
-				<input type="number" name="overlap" id="overlap" step="0.1" />
-			</div>
+                        <img src="" alt="" class="preview">
+                    </div>
+                    
+                </div>
 
+                <div id="image-select-2" class="image-select">
+                    
+                    <span>
+                        <label for="image-select-2-file" class="button"> image 2 </label>
+                        <input type="file" id="image-select-2-file" value="image" accept="image/*" />
+                    </span>
+
+                    <div class="image-options hidden">
+                        <span>
+                            <label for="image-2-mode"> mode </label>
+                            <select id="image-2-mode">
+                                <!-- <option value="crop">crop</option> -->
+                                <option value="stretch">stretch</option>
+                                <!-- <option value="padded">padded</option> -->
+                            </select>
+                        </span>
+                        
+                        <img src="" alt="" class="preview">
+                    </div>
+                    
+                </div>
+            </div>
+
+
+			<label for="format-select"> select paper size </label>
+			<select id="format-select">
+				<option value="A3">A3</option>
+				<option value="A4">A4</option>
+			</select>
+
+
+			<label for="padding"> paper padding </label>
+			<input type="number" id="padding" step="0.1" value="0" />
+
+
+			<label for="width"> envelope width (cm) </label>
+			<input type="number" id="width" step="0.25" value="22" />
+
+
+			<label for="height"> envelope height (cm) </label>
+			<input type="number" id="height" step="0.25" value="16" />
+
+
+			<label for="overlap"> amount of overlap of envelopes flaps (cm) </label>
+			<input type="number" name="overlap" id="overlap" step="0.1" value="1" />
+
+			
 			<div id="preview-download">
 				<button id="download">download</button>
 			</div>
+		
 		</div>
 	</body>
 </html>
