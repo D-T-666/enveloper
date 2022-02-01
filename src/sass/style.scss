@@ -4,6 +4,7 @@ $fgd: #eee;
 $fgh: #beb;
 
 body {
+  overscroll-behavior: none;
   background-color: $bg;
   color: $fg;
   font-family: monospace;

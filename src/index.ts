@@ -1,4 +1,5 @@
 import * as p5 from "p5";
+import { renderEnvelope } from "./createEnvelope";
 import "./sass/style.scss";
 
 new p5((p) => {
@@ -6,10 +7,43 @@ new p5((p) => {
   let a3: p5.Graphics;
 
   p.setup = () => {
+    a3 = p.createGraphics(100, 100);
+
     const img1 = <HTMLInputElement>document.getElementById("img-1");
     const img2 = <HTMLInputElement>document.getElementById("img-2");
-    const paper_format = <HTMLInputElement>document.getElementById("width");
-    const envelope_width = <HTMLInputElement>document.getElementById("height");
+    const paper_format = <HTMLButtonElement>(
+      document.getElementById("format-select")
+    );
+    const width = <HTMLInputElement>document.getElementById("width");
+    const height = <HTMLInputElement>document.getElementById("height");
+    const overlap = <HTMLInputElement>document.getElementById("overlap");
+    const download = <HTMLButtonElement>document.getElementById("download");
+
+    download.addEventListener("click", () => {
+      renderEnvelope(
+        p,
+        [
+          {
+            pimage: imgs[0],
+          },
+          {
+            pimage: imgs[1],
+          },
+        ],
+        {
+          name: <"A3" | "A4">paper_format.value,
+          canvas: a3,
+          padding: 0,
+        },
+        {
+          width: Number(width.value),
+          height: Number(height.value),
+          overlap: Number(overlap.value),
+        }
+      );
+
+      p.save(a3, "gay.jpg");
+    });
 
     imgs = [];
 
@@ -35,8 +69,6 @@ new p5((p) => {
       // preview_element.style.display = "unset";
       imgs[1] = p.loadImage(data);
     });
-
-    a3 = p.createGraphics(3508, 4960);
   };
 
   p.draw = () => {
