@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+      "target": "ES5",
+      "removeComments": true,
+      "noImplicitAny": true,
+      "outDir": "./build/",
+      "moduleResolution": "Node",
+      "skipLibCheck": true
+  }
+}

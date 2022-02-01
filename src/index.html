@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ka">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>enveloper</title>
+	</head>
+	<body>
+		<div id="main">
+			<div class="image-select done">
+				<!-- <div> -->
+					<label for="img-1" class="button"> load image 1 </label>
+					<input type="file" id="img-1" value="image" accept="image/*" style="display: none;" />
+				<!-- </div> -->
+				<!-- <div> -->
+					<label for="img-2" class="button"> load image 2 </label>
+					<input type="file" id="img-2" value="image" accept="image/*" style="display: none;" />
+				<!-- </div> -->
+			</div>
+
+			<div class="format-select">
+				<label>select format</label>
+				<select id="format-select">
+					<option value="A3">A3</option>
+					<option value="A4">A4</option>
+				</select>
+			</div>
+
+			<div class="size-select">
+				<label for="width">width (cm)</label>
+				<input type="number" id="width" step="0.25" />
+				<label for="height">height (cm)</label>
+				<input type="number" id="height" step="0.25" />
+			</div>
+
+			<div class="overlap-select">
+				<label for="overlap">amount of overlap (cm)</label>
+				<input type="number" name="overlap" id="overlap" step="0.1" />
+			</div>
+
+			<div id="preview-download">
+				<button id="download">download</button>
+			</div>
+		</div>
+	</body>
+</html>
