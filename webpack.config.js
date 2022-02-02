@@ -55,6 +55,9 @@ module.exports = {
       inject: "body",
     }),
     new WebpackPwaManifest({
+      publicPath: "/",
+      filename: "manifest.json",
+
       icons: [
         {
           src: path.resolve("src/assets/icon.png"),
