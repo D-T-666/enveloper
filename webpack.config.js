@@ -55,7 +55,7 @@ module.exports = {
       inject: "body",
     }),
     new WebpackPwaManifest({
-      publicPath: "/",
+      publicPath: "/enveloper/",
       filename: "manifest.json",
 
       icons: [
