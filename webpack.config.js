@@ -1,5 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WebpackPwaManifest = require("webpack-pwa-manifest");
+const WorkboxPlugin = require("workbox-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -24,6 +26,10 @@ module.exports = {
         test: /\.s[ac]ss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+      },
     ],
   },
   resolve: {
@@ -43,9 +49,31 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      favicon: "./src/assets/favicon.ico",
       template: "./src/index.html",
       filename: "index.html",
       inject: "body",
+    }),
+    new WebpackPwaManifest({
+      icons: [
+        {
+          src: path.resolve("src/assets/icon.png"),
+          sizes: "192x192",
+          type: "image/png",
+        },
+      ],
+      description: "Generates envelopes with given pictures and dimensions.",
+      display: "standalone",
+      background_color: "#fff",
+      name: "enveloper",
+      short_name: "enveloper",
+      start_url: "/enveloper/index.html",
+    }),
+    new WorkboxPlugin.GenerateSW({
+      // these options encourage the ServiceWorkers to get in there fast
+      // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true,
     }),
   ],
 };
