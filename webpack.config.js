@@ -68,6 +68,7 @@ module.exports = {
       description: "Generates envelopes with given pictures and dimensions.",
       display: "standalone",
       background_color: "#fff",
+      theme_color: "#000",
       name: "enveloper",
       short_name: "enveloper",
       start_url: "/enveloper/index.html",
