@@ -16,6 +16,9 @@ const getPaperSizeCM = (
       height = 29.7;
   }
 
+  width -= format.padding * 2;
+  height -= format.padding * 2;
+
   return {
     width,
     height,

@@ -14,6 +14,7 @@ A simple static page that generates printable envelope templates with given imag
     - [ ] padded
     - [x] stretch
 - [x] page size in standard formats (A4, A3)
+  - [x] page padding
 - [x] envelope size in (cm)
 - [ ] overlap of the flaps (cm)
 

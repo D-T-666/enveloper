@@ -65,6 +65,7 @@ body {
     input[type="number"] {
       border: 1px solid $fgd;
       border-radius: none;
+      max-width: 4rem;
     }
   }
 }
