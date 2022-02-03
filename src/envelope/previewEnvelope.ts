@@ -1,34 +1,7 @@
-import e = require("express");
+import { getPaperSizeCM } from "./createEnvelope";
 import { EnvelopeDimensions, PaperFormat, Picture } from "./types";
 
-export const getPaperSizeCM = (
-  format: PaperFormat,
-  padding?: boolean
-): { width: number; height: number } => {
-  let width: number, height: number;
-
-  switch (format.name) {
-    case "A3":
-      width = 29.7;
-      height = 42.0;
-      break;
-    case "A4":
-      width = 21.0;
-      height = 29.7;
-  }
-
-  if (padding) {
-    width -= format.padding * 2;
-    height -= format.padding * 2;
-  }
-
-  return {
-    width,
-    height,
-  };
-};
-
-export const renderEnvelope = (
+export const previewEnvelope = (
   p: p5,
   pictures: Picture[],
   paper_format: PaperFormat,
@@ -38,23 +11,21 @@ export const renderEnvelope = (
   // parameters and renderes the envelope to a
   // given p5.Graphics object.
 
-  let ppcm = 118.110236;
-
   let canvas: p5.Graphics | p5 = paper_format.canvas;
-  let paper_size = getPaperSizeCM(paper_format, true);
-  const ppw = paper_size.width * ppcm - 2 * paper_format.padding;
-  const pph = paper_size.height * ppcm - 2 * paper_format.padding;
-  canvas.resizeCanvas(ppw, pph);
-  canvas.pixelDensity(1);
-  let pw = envelope_dimesnions.width * ppcm;
-  let ph = envelope_dimesnions.height * ppcm;
+  let paper_size = getPaperSizeCM(paper_format);
+  const p_ratio = paper_size.height / paper_size.width;
+  const e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
+  const ppw = canvas.width;
+  const pph = ppw * p_ratio;
+  let ppcm = ppw / paper_size.width;
+  const pw = envelope_dimesnions.width * ppcm;
+  const ph = envelope_dimesnions.height * ppcm;
 
   let img: p5.Image[] = pictures.map((a) => a.pimage);
 
   let main_angle = p.createVector(pw, ph);
 
-  // canvas.background(255);
-  canvas.clear(255, 255, 255, 60);
+  canvas.background(255);
 
   canvas.push();
   {
@@ -63,7 +34,6 @@ export const renderEnvelope = (
 
     // Draw the main pictures
     {
-      let e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
       if (pictures[0].mode === "crop") {
         let img_crop: any;
         let cw: number, ch: number;
@@ -177,6 +147,7 @@ export const renderEnvelope = (
             )) *
           2;
         canvas.noStroke();
+        canvas.fill(255);
         canvas.rotate(main_angle.heading() - p.HALF_PI);
         canvas.erase();
         canvas.rect(
@@ -257,4 +228,15 @@ export const renderEnvelope = (
     }
   }
   canvas.pop();
+
+  canvas.noFill();
+  canvas.stroke(0);
+  canvas.rect(0, 0, ppw, pph);
+  canvas.stroke(255, 0, 0);
+  canvas.rect(
+    paper_format.padding * ppcm,
+    paper_format.padding * ppcm,
+    ppw - 2 * paper_format.padding * ppcm,
+    pph - 2 * paper_format.padding * ppcm
+  );
 };

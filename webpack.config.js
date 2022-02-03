@@ -1,11 +1,14 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WebpackMildCompile = require("webpack-mild-compile").Plugin;
 const WebpackPwaManifest = require("webpack-pwa-manifest");
 const WorkboxPlugin = require("workbox-webpack-plugin");
 
+const prod = process.env.NODE_ENV === "production";
+
 module.exports = {
   entry: "./src/index.ts",
-  mode: process.env.NODE_ENV === "production" ? "production" : "development",
+  mode: prod ? "production" : "development",
   // externals: {
   //   p5: "p5",
   // },
@@ -54,30 +57,33 @@ module.exports = {
       filename: "index.html",
       inject: "body",
     }),
-    new WebpackPwaManifest({
-      publicPath: process.env.NODE_ENV === "production" ? "/enveloper/" : "/",
-      filename: "manifest.json",
-
-      icons: [
-        {
-          src: path.resolve("src/assets/icon.png"),
-          sizes: "192x192",
-          type: "image/png",
-        },
-      ],
-      description: "Generates envelopes with given pictures and dimensions.",
-      display: "standalone",
-      background_color: "#fff",
-      theme_color: "#000",
-      name: "enveloper",
-      short_name: "enveloper",
-      start_url: "/enveloper/index.html",
-    }),
-    new WorkboxPlugin.GenerateSW({
-      // these options encourage the ServiceWorkers to get in there fast
-      // and not allow any straggling "old" SWs to hang around
-      clientsClaim: true,
-      skipWaiting: true,
-    }),
+    new WebpackMildCompile({}),
+    ...(prod
+      ? [
+          new WebpackPwaManifest({
+            publicPath: prod ? "/enveloper/" : "/",
+            // filename: "manifest.json",
+            icons: [
+              {
+                src: path.resolve("src/assets/icon.png"),
+                sizes: "192x192",
+                type: "image/png",
+              },
+            ],
+            description:
+              "Generates envelopes with given pictures and dimensions.",
+            display: "standalone",
+            background_color: "#fff",
+            theme_color: "#000",
+            name: "enveloper",
+            short_name: "enveloper",
+            start_url: prod ? "/enveloper/index.html" : "/index.html",
+          }),
+          new WorkboxPlugin.GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true,
+          }),
+        ]
+      : []),
   ],
 };

@@ -1,5 +1,6 @@
 import * as p5 from "p5";
 import { renderEnvelope } from "./envelope/createEnvelope";
+import { previewEnvelope } from "./envelope/previewEnvelope";
 import "./sass/style.scss";
 
 new p5((p: p5) => {
@@ -7,7 +8,11 @@ new p5((p: p5) => {
   let canvas: p5.Graphics;
 
   p.setup = () => {
-    p.noCanvas();
+    let canvas_width = p.min(
+      p.windowWidth / 2,
+      (p.windowHeight - 40) / (29.7 / 21)
+    );
+    p.createCanvas(canvas_width, canvas_width * (29.7 / 21));
     canvas = p.createGraphics(100, 100);
 
     const img1_mode = <HTMLSelectElement>(
@@ -30,6 +35,47 @@ new p5((p: p5) => {
     const overlap = <HTMLInputElement>document.getElementById("overlap");
     const download = <HTMLButtonElement>document.getElementById("download");
     const padding = <HTMLButtonElement>document.getElementById("padding");
+
+    const onChange = () => {
+      previewEnvelope(
+        p,
+        [
+          {
+            pimage: imgs[0],
+            mode: <"crop" | "padded" | "stretch">img1_mode.value,
+          },
+          {
+            pimage: imgs[1],
+            mode: <"crop" | "padded" | "stretch">img2_mode.value,
+          },
+        ],
+        {
+          name: <"A3" | "A4">paper_format.value,
+          canvas: p,
+          padding: Number(padding.value),
+        },
+        {
+          width: Number(width.value),
+          height: Number(height.value),
+          overlap: Number(overlap.value),
+        }
+      );
+    };
+
+    [
+      img1_mode,
+      img2_mode,
+      img1,
+      img2,
+      paper_format,
+      width,
+      height,
+      overlap,
+      download,
+      padding,
+    ].forEach((element) => {
+      element.addEventListener("change", onChange);
+    });
 
     download.addEventListener("click", () => {
       renderEnvelope(
@@ -56,7 +102,7 @@ new p5((p: p5) => {
         }
       );
 
-      p.save(canvas, "envelope.jpg");
+      p.save(canvas, "envelope.png");
     });
 
     imgs = [];
@@ -92,7 +138,11 @@ new p5((p: p5) => {
       imgs[1] = p.loadImage(data);
     });
   };
-}, document.getElementById("preview-download"));
+
+  p.draw = () => {
+    // previewEnvelope();
+  };
+}, document.getElementById("preview"));
 
 const assingFileCallback = (
   elt: HTMLInputElement,
@@ -124,14 +174,22 @@ const assingFileCallback = (
 // Retistering Service Worker
 
 if ("serviceWorker" in navigator) {
+  console.log(process.env.NODE_ENV);
   window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .then((registration) => {
-        console.log("SW registered: ", registration);
-      })
-      .catch((registrationError) => {
-        console.log("SW registration failed: ", registrationError);
+    if (process.env.NODE_ENV === "production")
+      navigator.serviceWorker
+        .register("./service-worker.js")
+        .then((registration) => {
+          console.log("SW registered: ", registration);
+        })
+        .catch((registrationError) => {
+          console.log("SW registration failed: ", registrationError);
+        });
+    else
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
       });
   });
 }

@@ -1,6 +1,6 @@
 export interface PaperFormat {
   name: "A3" | "A4";
-  canvas: p5.Graphics;
+  canvas: p5.Graphics | p5;
   padding: number;
   ppi?: number;
 }
