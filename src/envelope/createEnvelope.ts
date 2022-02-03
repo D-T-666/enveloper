@@ -39,31 +39,28 @@ export const renderEnvelope = (
 
   let canvas: p5.Graphics = paper_format.canvas;
   let paper_size = getPaperSizeCM(paper_format);
-  canvas.resizeCanvas(
-    paper_size.width * ppcm - 2 * paper_format.padding,
-    paper_size.height * ppcm - 2 * paper_format.padding
-  );
+  const ppw = paper_size.width * ppcm - 2 * paper_format.padding;
+  const pph = paper_size.height * ppcm - 2 * paper_format.padding;
+  canvas.resizeCanvas(ppw, pph);
   canvas.pixelDensity(1);
+  let pw = envelope_dimesnions.width * ppcm;
+  let ph = envelope_dimesnions.height * ppcm;
 
   let img: p5.Image[] = pictures.map((a) => a.pimage);
+
+  let main_angle = p.createVector(pw, ph);
 
   canvas.background(255);
 
   canvas.push();
   {
     canvas.translate(canvas.width / 2, canvas.height / 2);
-    canvas.rotate(
-      p
-        .createVector(envelope_dimesnions.height, envelope_dimesnions.width)
-        .heading()
-    );
+    canvas.rotate(p.HALF_PI - main_angle.heading());
 
     // Draw the main pictures
     {
-      let pw = envelope_dimesnions.width * ppcm;
-      let ph = envelope_dimesnions.height * ppcm;
+      let e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
       if (pictures[0].mode === "crop") {
-        let e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
         let img_crop: any;
         let cw: number, ch: number;
 
@@ -165,6 +162,48 @@ export const renderEnvelope = (
       canvas.image(img[1], -pw / 2, -ph / 2 - ph, pw, ph);
 
       canvas.image(img[1], -pw / 2, -ph / 2 + ph, pw, ph);
+
+      canvas.push();
+      {
+        const _size =
+          ((envelope_dimesnions.width * envelope_dimesnions.height) /
+            p.sqrt(
+              envelope_dimesnions.width * envelope_dimesnions.width +
+                envelope_dimesnions.height * envelope_dimesnions.height
+            )) *
+          2;
+        canvas.noStroke();
+        // canvas.fill(0, 0, 255);
+        canvas.rotate(main_angle.heading() - p.HALF_PI);
+        canvas.rect(
+          ((_size + envelope_dimesnions.overlap) / 2) * ppcm,
+          -pph / 2,
+          ppw,
+          pph
+        );
+        canvas.rect(
+          -((_size + envelope_dimesnions.overlap) / 2) * ppcm - ppw,
+          -pph / 2,
+          ppw,
+          pph
+        );
+        canvas.rotate(p.HALF_PI - main_angle.heading());
+        canvas.rotate(p.HALF_PI - main_angle.heading());
+        canvas.rect(
+          ((_size + envelope_dimesnions.overlap) / 2) * ppcm,
+          -pph / 2,
+          ppw,
+          pph
+        );
+        canvas.rect(
+          -((_size + envelope_dimesnions.overlap) / 2) * ppcm - ppw,
+          -pph / 2,
+          ppw,
+          pph
+        );
+        canvas.rotate(main_angle.heading() - p.HALF_PI);
+      }
+      canvas.pop();
     }
   }
   canvas.pop();

@@ -55,7 +55,7 @@ module.exports = {
       inject: "body",
     }),
     new WebpackPwaManifest({
-      publicPath: "/enveloper/",
+      publicPath: process.env.NODE_ENV === "production" ? "/enveloper/" : "/",
       filename: "manifest.json",
 
       icons: [
