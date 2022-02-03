@@ -50,7 +50,8 @@ export const renderEnvelope = (
 
   let main_angle = p.createVector(pw, ph);
 
-  canvas.background(255);
+  // canvas.background(255);
+  canvas.clear(255, 255, 255, 60);
 
   canvas.push();
   {
@@ -173,8 +174,8 @@ export const renderEnvelope = (
             )) *
           2;
         canvas.noStroke();
-        // canvas.fill(0, 0, 255);
         canvas.rotate(main_angle.heading() - p.HALF_PI);
+        canvas.erase();
         canvas.rect(
           ((_size + envelope_dimesnions.overlap) / 2) * ppcm,
           -pph / 2,
@@ -202,6 +203,34 @@ export const renderEnvelope = (
           pph
         );
         canvas.rotate(main_angle.heading() - p.HALF_PI);
+
+        // Rounded corners
+        {
+          let sw = envelope_dimesnions.overlap * ppcm;
+          canvas.noFill();
+          canvas.strokeCap(p.SQUARE);
+          canvas.stroke(255);
+          canvas.strokeWeight(sw);
+
+          canvas.arc(
+            0,
+            ph,
+            envelope_dimesnions.overlap * ppcm + sw,
+            envelope_dimesnions.overlap * ppcm + sw,
+            p.HALF_PI - main_angle.heading(),
+            main_angle.heading() + p.HALF_PI
+          );
+
+          canvas.arc(
+            0,
+            -ph,
+            envelope_dimesnions.overlap * ppcm + sw,
+            envelope_dimesnions.overlap * ppcm + sw,
+            p.HALF_PI - main_angle.heading() + p.PI,
+            main_angle.heading() - p.HALF_PI
+          );
+        }
+        canvas.noErase();
       }
       canvas.pop();
     }
