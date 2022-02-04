@@ -14,12 +14,13 @@ new p5((p: p5) => {
     );
     p.createCanvas(canvas_width, canvas_width * (29.7 / 21));
     canvas = p.createGraphics(100, 100);
+    imgs = [p.createImage(1, 1), p.createImage(1, 1)];
 
     const img1_mode = <HTMLSelectElement>(
       document.getElementById("image-1-mode")
     );
     const img2_mode = <HTMLSelectElement>(
-      document.getElementById("image-1-mode")
+      document.getElementById("image-2-mode")
     );
     const img1 = <HTMLInputElement>(
       document.getElementById("image-select-1-file")
@@ -36,7 +37,7 @@ new p5((p: p5) => {
     const download = <HTMLButtonElement>document.getElementById("download");
     const padding = <HTMLButtonElement>document.getElementById("padding");
 
-    const onChange = () => {
+    const onChange = () =>
       previewEnvelope(
         p,
         [
@@ -60,22 +61,6 @@ new p5((p: p5) => {
           overlap: Number(overlap.value),
         }
       );
-    };
-
-    [
-      img1_mode,
-      img2_mode,
-      img1,
-      img2,
-      paper_format,
-      width,
-      height,
-      overlap,
-      download,
-      padding,
-    ].forEach((element) => {
-      element.addEventListener("change", onChange);
-    });
 
     download.addEventListener("click", () => {
       renderEnvelope(
@@ -105,8 +90,6 @@ new p5((p: p5) => {
       p.save(canvas, "envelope.png");
     });
 
-    imgs = [];
-
     assingFileCallback(img1, (data) => {
       const image_options = document
         .getElementById("image-select-1")
@@ -120,7 +103,7 @@ new p5((p: p5) => {
 
       preview.src = data;
 
-      imgs[0] = p.loadImage(data);
+      imgs[0] = p.loadImage(data, onChange);
     });
     assingFileCallback(img2, (data) => {
       const image_options = document
@@ -135,7 +118,21 @@ new p5((p: p5) => {
 
       preview.src = data;
 
-      imgs[1] = p.loadImage(data);
+      imgs[1] = p.loadImage(data, onChange);
+    });
+
+    [
+      img1_mode,
+      img2_mode,
+      paper_format,
+      width,
+      height,
+      overlap,
+      padding,
+      // img1,
+      // img2,
+    ].forEach((element) => {
+      element.addEventListener("change", onChange);
     });
   };
 

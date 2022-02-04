@@ -28,6 +28,40 @@ export const getPaperSizeCM = (
   };
 };
 
+export const getCroppedImage = (img: p5.Image, w2h_ratio: number) => {
+  if (w2h_ratio > img.width / img.height) {
+    return img.get(
+      0,
+      (img.height - img.width / w2h_ratio) / 2,
+      img.width,
+      img.width / w2h_ratio
+    );
+  } else {
+    return img.get(
+      (img.width - img.height * w2h_ratio) / 2,
+      0,
+      img.height * w2h_ratio,
+      img.height
+    );
+  }
+};
+
+export const getPaddedImage = (img: p5.Image, w2h_ratio: number) => {
+  return w2h_ratio > img.width / img.height
+    ? img.get(
+        (img.width - img.height * w2h_ratio) / 2,
+        0,
+        img.height * w2h_ratio,
+        img.height
+      )
+    : img.get(
+        0,
+        (img.height - img.width / w2h_ratio) / 2,
+        img.width,
+        img.width / w2h_ratio
+      );
+};
+
 export const renderEnvelope = (
   p: p5,
   pictures: Picture[],
@@ -49,7 +83,18 @@ export const renderEnvelope = (
   let pw = envelope_dimesnions.width * ppcm;
   let ph = envelope_dimesnions.height * ppcm;
 
-  let img: p5.Image[] = pictures.map((a) => a.pimage);
+  let e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
+
+  let img: p5.Image[] = pictures.map((a) => {
+    switch (a.mode) {
+      case "crop":
+        return getCroppedImage(a.pimage, e_ratio);
+      case "padded":
+        return getPaddedImage(a.pimage, e_ratio);
+      case "stretch":
+        return a.pimage;
+    }
+  });
 
   let main_angle = p.createVector(pw, ph);
 
@@ -63,98 +108,7 @@ export const renderEnvelope = (
 
     // Draw the main pictures
     {
-      let e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
-      if (pictures[0].mode === "crop") {
-        let img_crop: any;
-        let cw: number, ch: number;
-
-        canvas.push();
-
-        if (img[0].width > img[0].height) {
-          if (e_ratio > img[0].width / img[0].height) {
-            img_crop = img[0].get(
-              0,
-              (img[0].height - img[0].width / e_ratio) / 2,
-              img[0].width,
-              img[0].width / e_ratio
-            );
-          } else {
-            img_crop = img[0].get(
-              (img[0].width - img[0].height * e_ratio) / 2,
-              0,
-              img[0].height * e_ratio,
-              img[0].height
-            );
-          }
-          cw = pw;
-          ch = ph;
-        } else {
-          if (e_ratio > img[0].height / img[0].width) {
-            img_crop = img[0].get(
-              (img[0].width - img[0].height / e_ratio) / 2,
-              0,
-              img[0].height / e_ratio,
-              img[0].height
-            );
-          } else {
-            img_crop = img[0].get(
-              0,
-              (img[0].height - img[0].width * e_ratio) / 2,
-              img[0].width,
-              img[0].width * e_ratio
-            );
-          }
-          cw = ph;
-          ch = pw;
-          canvas.rotate(-p.HALF_PI);
-        }
-        canvas.image(img_crop, -cw / 2, -ch / 2, cw, ch);
-        canvas.pop();
-      } else if (pictures[0].mode === "padded") {
-        // TODO: implement this mode
-        // This currently kinda works, needs minor fixing up
-        // ---
-        // let e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
-        // let cw: number, ch: number;
-        // canvas.push();
-        // canvas.fill(255, 0, 0);
-        // canvas.rect(-pw / 2, -ph / 2, pw, ph);
-        // if (img[0].width > img[0].height) {
-        //   let i_ratio = img[0].width / img[0].height;
-        //   cw = pw;
-        //   ch = ph;
-        //   if (e_ratio > i_ratio) {
-        //     canvas.image(
-        //       img[0],
-        //       (-ch * i_ratio) / 2,
-        //       -ch / 2,
-        //       ch * i_ratio,
-        //       ch
-        //     );
-        //   } else {
-        //     canvas.image(img[0], -cw / 2, -cw / i_ratio / 2, cw, cw / i_ratio);
-        //   }
-        // } else {
-        //   let i_ratio = img[0].height / img[0].width;
-        //   cw = ph;
-        //   ch = pw;
-        //   canvas.rotate(-p.HALF_PI);
-        //   if (e_ratio > i_ratio) {
-        //     canvas.image(
-        //       img[0],
-        //       -ch / 2,
-        //       (-ch * i_ratio) / 2,
-        //       ch,
-        //       ch * i_ratio
-        //     );
-        //   } else {
-        //     canvas.image(img[0], -cw / i_ratio / 2, -cw / 2, cw / i_ratio, cw);
-        //   }
-        // }
-        // canvas.pop();
-      } else if (pictures[0].mode === "stretch") {
-        canvas.image(img[0], -pw / 2, -ph / 2, pw, ph);
-      }
+      canvas.image(img[0], -pw / 2, -ph / 2, pw, ph);
 
       // TODO: Handle the drawing of the other side of the envelope (the flaps)
       canvas.image(img[1], -pw / 2 - pw, -ph / 2, pw, ph);

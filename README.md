@@ -5,13 +5,13 @@ A simple static page that generates printable envelope templates with given imag
 ### You can specify:
 
 - [x] the two pictures
-  - [ ] inner picture modes
+  - [x] inner picture modes
     - [x] crop
-    - [ ] padded
+    - [x] padded
     - [x] stretch
-  - [ ] outer picture modes
-    - [ ] crop
-    - [ ] padded
+  - [x] outer picture modes
+    - [x] crop
+    - [x] padded
     - [x] stretch
 - [x] page size in standard formats (A4, A3)
   - [x] page padding
@@ -20,5 +20,8 @@ A simple static page that generates printable envelope templates with given imag
 
 ### Does:
 
+- [x] cuttin out of the main envelope shape
 - [ ] rounding of the corners
+  - [x] kinda
+- [ ] frames
 - [ ] stamp and addres spots (puts white rectangles in place of a stamp and the place you would write the addresses on)
