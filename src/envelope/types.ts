@@ -8,10 +8,13 @@ export interface PaperFormat {
 export interface Picture {
   pimage: p5.Image;
   mode: "crop" | "stretch" | "padded";
+  padding: number;
 }
 
-export interface EnvelopeDimensions {
+export interface EnvelopeParameters {
   width: number;
   height: number;
   overlap: number;
+  outline_width: number;
+  outline_color: p5.Color;
 }

@@ -1,15 +1,16 @@
 import {
-  getCroppedImage,
-  getPaddedImage,
+  drawEnvelopeOutlines,
+  drawImagesEnvelope,
+  getImagesFromPictures,
   getPaperSizeCM,
 } from "./createEnvelope";
-import { EnvelopeDimensions, PaperFormat, Picture } from "./types";
+import { EnvelopeParameters, PaperFormat, Picture } from "./types";
 
 export const previewEnvelope = (
   p: p5,
   pictures: Picture[],
   paper_format: PaperFormat,
-  envelope_dimesnions: EnvelopeDimensions
+  envelope_dimesnions: EnvelopeParameters
 ) => {
   // This function takes in all the necessary
   // parameters and renderes the envelope to a
@@ -21,20 +22,12 @@ export const previewEnvelope = (
   const e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
   const ppw = canvas.width;
   const pph = ppw * p_ratio;
+
+  canvas.resizeCanvas(ppw, pph);
+
   let ppcm = ppw / paper_size.width;
   const pw = envelope_dimesnions.width * ppcm;
   const ph = envelope_dimesnions.height * ppcm;
-
-  let img: p5.Image[] = pictures.map((a) => {
-    switch (a.mode) {
-      case "crop":
-        return getCroppedImage(a.pimage, e_ratio);
-      case "padded":
-        return getPaddedImage(a.pimage, e_ratio);
-      case "stretch":
-        return a.pimage;
-    }
-  });
 
   let main_angle = p.createVector(pw, ph);
 
@@ -45,21 +38,13 @@ export const previewEnvelope = (
     canvas.translate(canvas.width / 2, canvas.height / 2);
     canvas.rotate(p.HALF_PI - main_angle.heading());
 
+    {
+      drawImagesEnvelope(p, canvas, pictures, envelope_dimesnions, ppcm);
+      drawEnvelopeOutlines(p, canvas, envelope_dimesnions, ppcm);
+    }
+
     // Draw the main pictures
     {
-      canvas.image(img[0], -pw / 2, -ph / 2, pw, ph);
-
-      // TODO: Handle the drawing of the other side of the envelope (the flaps)
-      canvas.image(img[1], -pw / 2 - pw, -ph / 2, pw, ph);
-
-      canvas.image(img[1], -pw / 2 + pw, -ph / 2, pw, ph);
-
-      canvas.rotate(p.PI);
-
-      canvas.image(img[1], -pw / 2, -ph / 2 - ph, pw, ph);
-
-      canvas.image(img[1], -pw / 2, -ph / 2 + ph, pw, ph);
-
       canvas.push();
       {
         const _size =
@@ -152,6 +137,7 @@ export const previewEnvelope = (
   }
   canvas.pop();
 
+  // borders
   canvas.noFill();
   canvas.stroke(0);
   canvas.rect(0, 0, ppw, pph);
@@ -161,5 +147,28 @@ export const previewEnvelope = (
     paper_format.padding * ppcm,
     ppw - 2 * paper_format.padding * ppcm,
     pph - 2 * paper_format.padding * ppcm
+  );
+
+  // paper padding
+  canvas.noStroke();
+  canvas.fill(255, 0, 0, 20);
+  canvas.rect(0, 0, ppw, paper_format.padding * ppcm);
+  canvas.rect(
+    0,
+    pph - paper_format.padding * ppcm,
+    ppw,
+    paper_format.padding * ppcm
+  );
+  canvas.rect(
+    0,
+    paper_format.padding * ppcm,
+    paper_format.padding * ppcm,
+    pph - paper_format.padding * ppcm * 2
+  );
+  canvas.rect(
+    ppw - paper_format.padding * ppcm,
+    paper_format.padding * ppcm,
+    paper_format.padding * ppcm,
+    pph - paper_format.padding * ppcm * 2
   );
 };

@@ -36,6 +36,18 @@ new p5((p: p5) => {
     const overlap = <HTMLInputElement>document.getElementById("overlap");
     const download = <HTMLButtonElement>document.getElementById("download");
     const padding = <HTMLButtonElement>document.getElementById("padding");
+    const img1_padding = <HTMLInputElement>(
+      document.getElementById("image-1-padding")
+    );
+    const img2_padding = <HTMLInputElement>(
+      document.getElementById("image-2-padding")
+    );
+    const outline_width = <HTMLInputElement>(
+      document.getElementById("outline-width")
+    );
+    const outline_color = <HTMLInputElement>(
+      document.getElementById("outline-color")
+    );
 
     const onChange = () =>
       previewEnvelope(
@@ -44,10 +56,12 @@ new p5((p: p5) => {
           {
             pimage: imgs[0],
             mode: <"crop" | "padded" | "stretch">img1_mode.value,
+            padding: Number(img1_padding.value),
           },
           {
             pimage: imgs[1],
             mode: <"crop" | "padded" | "stretch">img2_mode.value,
+            padding: Number(img2_padding.value),
           },
         ],
         {
@@ -59,6 +73,8 @@ new p5((p: p5) => {
           width: Number(width.value),
           height: Number(height.value),
           overlap: Number(overlap.value),
+          outline_width: Number(outline_width.value),
+          outline_color: p.color(outline_color.value),
         }
       );
 
@@ -69,10 +85,12 @@ new p5((p: p5) => {
           {
             pimage: imgs[0],
             mode: <"crop" | "padded" | "stretch">img1_mode.value,
+            padding: Number(img1_padding.value),
           },
           {
             pimage: imgs[1],
             mode: <"crop" | "padded" | "stretch">img2_mode.value,
+            padding: Number(img2_padding.value),
           },
         ],
         {
@@ -84,6 +102,8 @@ new p5((p: p5) => {
           width: Number(width.value),
           height: Number(height.value),
           overlap: Number(overlap.value),
+          outline_width: Number(outline_width.value),
+          outline_color: p.color(outline_color.value),
         }
       );
 
@@ -129,8 +149,10 @@ new p5((p: p5) => {
       height,
       overlap,
       padding,
-      // img1,
-      // img2,
+      img1_padding,
+      img2_padding,
+      outline_width,
+      outline_color,
     ].forEach((element) => {
       element.addEventListener("change", onChange);
     });
