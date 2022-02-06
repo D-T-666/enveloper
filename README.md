@@ -5,14 +5,11 @@ A simple static page that generates printable envelope templates with given imag
 ### You can specify:
 
 - [x] the two pictures
-  - [x] inner picture modes
+  - [x] picture modes
     - [x] crop
     - [x] padded
     - [x] stretch
-  - [x] outer picture modes
-    - [x] crop
-    - [x] padded
-    - [x] stretch
+  - [x] padding
 - [x] page size in standard formats (A4, A3)
   - [x] page padding
 - [x] envelope size in (cm)
