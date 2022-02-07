@@ -179,7 +179,25 @@ export const drawImagesEnvelope = (
 
   canvas.image(img[1], ipx[1], ipy[1] - ph, ipw[1], iph[1]);
   canvas.image(img[1], ipx[1], ipy[1] + ph, ipw[1], iph[1]);
+
   canvas.rotate(-p.PI);
+
+  // Outlines
+  canvas.noFill();
+  // canvas.fill(255, 0, 255);
+  let sw: number;
+  sw = pictures[0].outline_width * ppcm;
+  canvas.strokeWeight(sw);
+  canvas.stroke(pictures[0].outline_color);
+  canvas.rect(ipx[0] + sw / 2, ipy[0] + sw / 2, ipw[0] - sw, iph[0] - sw);
+
+  sw = pictures[1].outline_width * ppcm;
+  canvas.strokeWeight(pictures[1].outline_width * ppcm);
+  canvas.stroke(pictures[1].outline_color);
+  canvas.rect(ipx[1] + sw / 2 - pw, ipy[1] + sw / 2, ipw[1] - sw, iph[1] - sw);
+  canvas.rect(ipx[1] + sw / 2 + pw, ipy[1] + sw / 2, ipw[1] - sw, iph[1] - sw);
+  canvas.rect(ipx[1] + sw / 2, ipy[1] + sw / 2 - ph, ipw[1] - sw, iph[1] - sw);
+  canvas.rect(ipx[1] + sw / 2, ipy[1] + sw / 2 + ph, ipw[1] - sw, iph[1] - sw);
 };
 
 export const renderEnvelope = (
@@ -228,6 +246,7 @@ export const renderEnvelope = (
         2;
       canvas.noStroke();
       canvas.rotate(main_angle.heading() - p.HALF_PI);
+      canvas.fill(255);
       canvas.erase();
       canvas.rect(
         ((_size + envelope_params.overlap) / 2) * ppcm,

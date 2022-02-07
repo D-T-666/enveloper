@@ -19,7 +19,6 @@ export const previewEnvelope = (
   let canvas: p5.Graphics | p5 = paper_format.canvas;
   let paper_size = getPaperSizeCM(paper_format);
   const p_ratio = paper_size.height / paper_size.width;
-  const e_ratio = envelope_dimesnions.width / envelope_dimesnions.height;
   const ppw = canvas.width;
   const pph = ppw * p_ratio;
 

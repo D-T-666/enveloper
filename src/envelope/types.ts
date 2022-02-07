@@ -9,6 +9,8 @@ export interface Picture {
   pimage: p5.Image;
   mode: "crop" | "stretch" | "padded";
   padding: number;
+  outline_width: number;
+  outline_color: p5.Color;
 }
 
 export interface EnvelopeParameters {

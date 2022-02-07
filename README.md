@@ -20,5 +20,5 @@ A simple static page that generates printable envelope templates with given imag
 - [x] cuttin out of the main envelope shape
 - [ ] rounding of the corners
   - [x] kinda
-- [ ] frames
+- [x] frames
 - [ ] stamp and addres spots (puts white rectangles in place of a stamp and the place you would write the addresses on)

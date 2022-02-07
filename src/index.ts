@@ -48,63 +48,64 @@ new p5((p: p5) => {
     const outline_color = <HTMLInputElement>(
       document.getElementById("outline-color")
     );
+    const img1_outline_width = <HTMLInputElement>(
+      document.getElementById("image-1-outline-width")
+    );
+    const img1_outline_color = <HTMLInputElement>(
+      document.getElementById("image-1-outline-color")
+    );
+    const img2_outline_width = <HTMLInputElement>(
+      document.getElementById("image-2-outline-width")
+    );
+    const img2_outline_color = <HTMLInputElement>(
+      document.getElementById("image-2-outline-color")
+    );
+
+    const getImgsParams = () => [
+      {
+        pimage: imgs[0],
+        mode: <"crop" | "padded" | "stretch">img1_mode.value,
+        padding: Number(img1_padding.value),
+        outline_width: Number(img1_outline_width.value),
+        outline_color: p.color(img1_outline_color.value),
+      },
+      {
+        pimage: imgs[1],
+        mode: <"crop" | "padded" | "stretch">img2_mode.value,
+        padding: Number(img2_padding.value),
+        outline_width: Number(img2_outline_width.value),
+        outline_color: p.color(img2_outline_color.value),
+      },
+    ];
+
+    const getPaperFo6rmatParams = (canvas: p5 | p5.Graphics) => ({
+      name: <"A3" | "A4">paper_format.value,
+      canvas: canvas,
+      padding: Number(padding.value),
+    });
+
+    const getEnveloperParams = () => ({
+      width: Number(width.value),
+      height: Number(height.value),
+      overlap: Number(overlap.value),
+      outline_width: Number(outline_width.value),
+      outline_color: p.color(outline_color.value),
+    });
 
     const onChange = () =>
       previewEnvelope(
         p,
-        [
-          {
-            pimage: imgs[0],
-            mode: <"crop" | "padded" | "stretch">img1_mode.value,
-            padding: Number(img1_padding.value),
-          },
-          {
-            pimage: imgs[1],
-            mode: <"crop" | "padded" | "stretch">img2_mode.value,
-            padding: Number(img2_padding.value),
-          },
-        ],
-        {
-          name: <"A3" | "A4">paper_format.value,
-          canvas: p,
-          padding: Number(padding.value),
-        },
-        {
-          width: Number(width.value),
-          height: Number(height.value),
-          overlap: Number(overlap.value),
-          outline_width: Number(outline_width.value),
-          outline_color: p.color(outline_color.value),
-        }
+        getImgsParams(),
+        getPaperFo6rmatParams(p),
+        getEnveloperParams()
       );
 
     download.addEventListener("click", () => {
       renderEnvelope(
         p,
-        [
-          {
-            pimage: imgs[0],
-            mode: <"crop" | "padded" | "stretch">img1_mode.value,
-            padding: Number(img1_padding.value),
-          },
-          {
-            pimage: imgs[1],
-            mode: <"crop" | "padded" | "stretch">img2_mode.value,
-            padding: Number(img2_padding.value),
-          },
-        ],
-        {
-          name: <"A3" | "A4">paper_format.value,
-          canvas: canvas,
-          padding: Number(padding.value),
-        },
-        {
-          width: Number(width.value),
-          height: Number(height.value),
-          overlap: Number(overlap.value),
-          outline_width: Number(outline_width.value),
-          outline_color: p.color(outline_color.value),
-        }
+        getImgsParams(),
+        getPaperFo6rmatParams(canvas),
+        getEnveloperParams()
       );
 
       p.save(canvas, "envelope.png");
@@ -153,6 +154,10 @@ new p5((p: p5) => {
       img2_padding,
       outline_width,
       outline_color,
+      img1_outline_width,
+      img2_outline_width,
+      img1_outline_color,
+      img2_outline_color,
     ].forEach((element) => {
       element.addEventListener("change", onChange);
     });
