@@ -223,8 +223,8 @@ export const renderEnvelope = (
 
   let main_angle = p.createVector(pw, ph);
 
-  canvas.background(255);
-  // canvas.clear(255, 255, 255, 60);
+  // canvas.background(255);
+  canvas.clear(255, 255, 255, 0);
 
   canvas.push();
   {
